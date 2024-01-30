@@ -41,7 +41,3 @@ if __name__ == '__main__':
     exit_state = main_loop(game_manager, main_screen, pygame.time.Clock())
 
     pygame.quit()
-
-    if (exit_state == ExitState.SAVE):
-        # TODO: Save the scoreboard with the best scores
-        pass
