@@ -1,13 +1,17 @@
 import pygame
 
+from src.constants import MAX_MAP_WIDTH, MAX_MAP_HEIGHT, TILE_SIZE, MAP_MARGIN, BACKGROUND_COLOR, TILES_COLOR, \
+    TILES_BORDER_COLOR
 from src.enums.direction import Direction
 from src.enums.exit_state import ExitState
+from src.map import Map
 from src.snake import Snake
 
 
 class GameController:
     def __init__(self, screen: pygame.Surface):
         self.screen = screen
+        self.map = Map(self.screen, MAX_MAP_WIDTH, MAX_MAP_HEIGHT, TILE_SIZE, (MAP_MARGIN, MAP_MARGIN), TILES_COLOR, TILES_BORDER_COLOR)
         self.snake = Snake(self.screen)
         self.exit_state = ExitState.CONTINUE
 
@@ -31,7 +35,12 @@ class GameController:
         elif event.key == pygame.K_RIGHT:
             self.snake.set_direction(Direction.RIGHT)
 
+    def draw(self) -> None:
+        self.map.draw()
+        self.snake.draw()
+
     def process_game_iteration(self) -> ExitState:
         self.events()
+        self.draw()
 
         return self.exit_state

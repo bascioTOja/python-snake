@@ -6,7 +6,7 @@ from src.game_controller import GameController
 def main_loop(game_controller: GameController, screen: pygame.Surface, clock: pygame.time.Clock) -> ExitState:
     action: ExitState = ExitState.CONTINUE
     while action == ExitState.CONTINUE:
-        screen.fill((0, 0, 0))
+        screen.fill(BACKGROUND_COLOR)
         action = game_controller.process_game_iteration()
         pygame.display.update()
         clock.tick(FRAME_RATE)
@@ -21,8 +21,8 @@ if __name__ == '__main__':
         STR_GAME_TITLE,
         MAIN_WIN_WIDTH,
         MAIN_WIN_HEIGHT,
-        FRAME_RATE,
-    )
+        FRAME_RATE, BACKGROUND_COLOR,
+)
 
     pygame.init()
 
