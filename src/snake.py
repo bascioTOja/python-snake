@@ -9,6 +9,8 @@ class Snake:
     def __init__(self, screen: pygame.Surface):
         self.screen = screen
         self.direction = Direction.RIGHT
+        self.speed = 10 / SNAKE_SPEED
+        self.move_timer = self.speed
 
         init_x = max(round(GRID_WIDTH * 0.3), 2)
         init_y = round(GRID_HEIGHT / 2)
@@ -19,15 +21,16 @@ class Snake:
     def set_direction(self, direction: Direction) -> None:
         self.direction = direction
 
-    def move(self) -> None:
-        if self.direction == Direction.UP:
-            self.pos = (self.pos[0], self.pos[1] - 1)
-        elif self.direction == Direction.DOWN:
-            self.pos = (self.pos[0], self.pos[1] + 1)
-        elif self.direction == Direction.LEFT:
-            self.pos = (self.pos[0] - 1, self.pos[1])
-        elif self.direction == Direction.RIGHT:
-            self.pos = (self.pos[0] + 1, self.pos[1])
+    def move(self, dt: float) -> None:
+        if self.move_timer > 0:
+            self.move_timer -= dt
+            return
+
+        self.move_timer = self.speed
+        move_direction = self.direction
+        print(move_direction)
+        for part in self.body:
+            move_direction = part.move(move_direction)
 
     def draw(self, screen: pygame.Surface) -> None:
         for part in self.body:

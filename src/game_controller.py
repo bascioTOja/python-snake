@@ -17,29 +17,31 @@ class GameController:
     def exit(self) -> None:
         self.exit_state = ExitState.EXIT
 
-    def events(self) -> None:
+    def events(self, dt: float) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.exit()
             elif event.type == pygame.KEYDOWN:
                 self.keydown_events(event)
 
+        self.snake.move(dt)
+
     def keydown_events(self, event) -> None:
-        if event.key == pygame.K_UP:
+        if event.key == pygame.K_UP or event.key == pygame.K_w:
             self.snake.set_direction(Direction.UP)
-        elif event.key == pygame.K_DOWN:
+        elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.snake.set_direction(Direction.DOWN)
-        elif event.key == pygame.K_LEFT:
+        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
             self.snake.set_direction(Direction.LEFT)
-        elif event.key == pygame.K_RIGHT:
+        elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.snake.set_direction(Direction.RIGHT)
 
     def draw(self) -> None:
         self.map.draw(self.screen)
         self.snake.draw(self.screen)
 
-    def process_game_iteration(self) -> ExitState:
-        self.events()
+    def process_game_iteration(self, dt: float) -> ExitState:
+        self.events(dt)
         self.draw()
 
         return self.exit_state

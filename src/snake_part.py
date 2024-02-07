@@ -16,6 +16,21 @@ class SnakePart:
         self.color = color
         self.size = TILE_SIZE
 
+    def move(self, move_direction: Direction) -> Direction:
+        if move_direction == Direction.UP:
+            self.y = self.y - 1
+        elif move_direction == Direction.DOWN:
+            self.y = self.y + 1
+        elif move_direction == Direction.LEFT:
+            self.x = self.x - 1
+        elif move_direction == Direction.RIGHT:
+            self.x = self.x + 1
+
+        old_direction = self.direction
+        self.direction = move_direction
+
+        return old_direction
+
     def draw(self, screen: pygame.Surface) -> None:
 
         pygame.draw.rect(

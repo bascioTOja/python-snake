@@ -6,10 +6,10 @@ from src.game_controller import GameController
 def main_loop(game_controller: GameController, screen: pygame.Surface, clock: pygame.time.Clock) -> ExitState:
     action: ExitState = ExitState.CONTINUE
     while action == ExitState.CONTINUE:
+        dt = clock.tick(FRAME_RATE)/1000
         screen.fill(BACKGROUND_COLOR)
-        action = game_controller.process_game_iteration()
+        action = game_controller.process_game_iteration(dt)
         pygame.display.update()
-        clock.tick(FRAME_RATE)
     return action
 
 
