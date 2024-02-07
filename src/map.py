@@ -1,36 +1,40 @@
 import pygame
 
+from src.constants import BORDER_COLOR, MAP_MARGIN, TILES_COLOR, SECOND_TILES_COLOR, BORDER_WIDTH
+
 
 class Map:
     def __init__(self,
-                 screen: pygame.Surface,
                  width: int,
                  height: int,
                  tile_size: int,
-                 position: tuple = (0, 0),
-                 background_color: tuple = (255, 255, 255),
-                 tile_border_color: tuple = (0, 0, 0)
                  ):
 
-        self.screen = screen
         self.width = width
         self.height = height
         self.tile_size = tile_size
         self.tiles_in_width = round(self.width / self.tile_size)
         self.tiles_in_height = round(self.height / self.tile_size)
-        self.position = position
-        self.background_color = background_color
-        self.tile_border_color = tile_border_color
+        self.position = (MAP_MARGIN, MAP_MARGIN)
+        self.border_width = BORDER_WIDTH
+        self.border_color = BORDER_COLOR
+        self.tiles_color = TILES_COLOR
+        self.second_tiles_color = SECOND_TILES_COLOR
 
-    def draw(self) -> None:
-        pygame.draw.rect(self.screen, self.background_color,
-                         (self.position[0], self.position[1], self.width, self.height))
-        # TODO: Draw like a checkerboard
+    def draw(self, screen: pygame.Surface) -> None:
+        # Border
+        pygame.draw.rect(
+            screen,
+            self.border_color,
+            (self.position[0] - self.border_width, self.position[1] - self.border_width, self.width + self.border_width*2, self.height + self.border_width*2)
+        )
+
+        # Tiles
         for y in range(self.tiles_in_height):
+            use_second_color = y % 2
             for x in range(self.tiles_in_width):
                 pygame.draw.rect(
-                    self.screen, self.tile_border_color,
+                    screen, self.tiles_color if use_second_color else self.second_tiles_color,
                     ((x * self.tile_size) + self.position[0], (y * self.tile_size) + self.position[1], self.tile_size, self.tile_size),
-                    2
                 )
-
+                use_second_color = not use_second_color
