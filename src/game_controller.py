@@ -1,8 +1,10 @@
+import random
 import pygame
 
-from src.constants import MAX_MAP_WIDTH, MAX_MAP_HEIGHT, TILE_SIZE
+from src.constants import MAX_MAP_WIDTH, MAX_MAP_HEIGHT, TILE_SIZE, APPLE_COLOR, GRID_HEIGHT, GRID_WIDTH
 from src.enums.direction import Direction
 from src.enums.exit_state import ExitState
+from src.fruit import Fruit
 from src.map import Map
 from src.snake import Snake
 
@@ -13,6 +15,7 @@ class GameController:
         self.map = Map(MAX_MAP_WIDTH, MAX_MAP_HEIGHT, TILE_SIZE)
         self.snake = Snake(self.screen)
         self.exit_state = ExitState.CONTINUE
+        self.fruit = self.generate_fruit()
 
     def exit(self) -> None:
         self.exit_state = ExitState.EXIT
@@ -39,9 +42,14 @@ class GameController:
     def draw(self) -> None:
         self.map.draw(self.screen)
         self.snake.draw(self.screen)
+        self.fruit.draw(self.screen)
 
     def process_game_iteration(self, dt: float) -> ExitState:
         self.events(dt)
         self.draw()
 
         return self.exit_state
+
+    def generate_fruit(self) -> Fruit:
+        # TODO: Improve this
+        return Fruit(random.randint(0, int(GRID_WIDTH)), random.randint(0, int(GRID_HEIGHT)), APPLE_COLOR)

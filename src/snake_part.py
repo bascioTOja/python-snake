@@ -2,7 +2,7 @@ from typing import Tuple
 
 import pygame
 
-from src.constants import SNAKE_COLOR, TILE_SIZE, MAP_MARGIN
+from src.constants import TILE_SIZE, MAP_MARGIN
 from src.enums.direction import Direction
 
 
