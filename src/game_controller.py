@@ -27,16 +27,14 @@ class GameController:
             elif event.type == pygame.KEYDOWN:
                 self.keydown_events(event)
 
-        self.snake.move(dt)
-
     def keydown_events(self, event) -> None:
-        if event.key == pygame.K_UP or event.key == pygame.K_w:
+        if event.key in [pygame.K_UP, pygame.K_w]:
             self.snake.set_direction(Direction.UP)
-        elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+        elif event.key in [pygame.K_DOWN, pygame.K_s]:
             self.snake.set_direction(Direction.DOWN)
-        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+        elif event.key in [pygame.K_LEFT, pygame.K_a]:
             self.snake.set_direction(Direction.LEFT)
-        elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+        elif event.key in [pygame.K_RIGHT, pygame.K_d]:
             self.snake.set_direction(Direction.RIGHT)
 
     def draw(self) -> None:
@@ -46,6 +44,11 @@ class GameController:
 
     def process_game_iteration(self, dt: float) -> ExitState:
         self.events(dt)
+
+        if self.snake.move(dt):
+            if self.snake.try_eat_fruit(self.fruit):
+                self.fruit = self.generate_fruit()
+
         self.draw()
 
         return self.exit_state

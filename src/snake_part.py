@@ -17,6 +17,10 @@ class SnakePart:
         self.size = TILE_SIZE
 
     def move(self, move_direction: Direction) -> Direction:
+        if self.direction == Direction.STOP:
+            self.direction = move_direction
+            return self.direction
+
         if move_direction == Direction.UP:
             self.y = self.y - 1
         elif move_direction == Direction.DOWN:
@@ -44,3 +48,6 @@ class SnakePart:
             ((self.x * self.size) + self.offset_width, (self.y * self.size) + self.offset_height,self.size, self.size),
             2
         )
+
+    def __str__(self) -> str:
+        return f'({self.x}, {self.y} - {self.direction})'

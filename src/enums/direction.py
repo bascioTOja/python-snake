@@ -6,3 +6,4 @@ class Direction(IntEnum):
     RIGHT = auto()
     DOWN = auto()
     LEFT = auto()
+    STOP = auto()
