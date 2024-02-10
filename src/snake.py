@@ -49,6 +49,13 @@ class Snake:
             for part in self.body[1:]
         )
 
+    def check_border_collision(self) -> bool:
+        head = self.body[0]
+        return head.x < 0 or head.x >= GRID_WIDTH or head.y < 0 or head.y >= GRID_HEIGHT
+
+    def check_collisions(self) -> bool:
+        return self.check_self_collision() or self.check_border_collision()
+
     def draw(self, screen: pygame.Surface) -> None:
         for part in self.body:
             part.draw(screen)

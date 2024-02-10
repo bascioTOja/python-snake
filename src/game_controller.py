@@ -53,7 +53,7 @@ class GameController:
         if self.snake.try_eat_fruit(self.fruit):
             self.fruit = self.generate_fruit()
 
-        if self.snake.check_self_collision():
+        if self.snake.check_collisions():
             self.exit_state = ExitState.RESTART
 
         self.draw()
