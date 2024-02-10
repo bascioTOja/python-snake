@@ -19,6 +19,7 @@ class Snake:
         self.body = [SnakePart(init_x, init_y, self.direction, HEAD_COLOR), SnakePart(init_x - 1, init_y, self.direction, SNAKE_COLOR)]
 
     def set_direction(self, direction: Direction) -> None:
+        # TODO: Make movement as queue
         self.direction = direction
 
     def move(self, dt: float) -> bool:
@@ -41,6 +42,12 @@ class Snake:
 
     def grow(self) -> None:
         self.body.append(SnakePart(self.body[-1].x, self.body[-1].y, Direction.STOP, SNAKE_COLOR))
+
+    def check_self_collision(self) -> bool:
+        return any(
+            part.x == self.body[0].x and part.y == self.body[0].y
+            for part in self.body[1:]
+        )
 
     def draw(self, screen: pygame.Surface) -> None:
         for part in self.body:

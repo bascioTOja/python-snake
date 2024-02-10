@@ -1,6 +1,18 @@
+import sys
+
 import pygame
+import subprocess
+import platform
+import contextlib
+
 from src.enums.exit_state import ExitState
 from src.game_controller import GameController
+from src.constants import (
+    STR_GAME_TITLE,
+    MAIN_WIN_WIDTH,
+    MAIN_WIN_HEIGHT,
+    FRAME_RATE, BACKGROUND_COLOR,
+)
 
 
 def main_loop(game_controller: GameController, screen: pygame.Surface, clock: pygame.time.Clock) -> ExitState:
@@ -10,20 +22,11 @@ def main_loop(game_controller: GameController, screen: pygame.Surface, clock: py
         screen.fill(BACKGROUND_COLOR)
         action = game_controller.process_game_iteration(dt)
         pygame.display.update()
+
     return action
 
 
 if __name__ == '__main__':
-    import platform
-    import contextlib
-
-    from src.constants import (
-        STR_GAME_TITLE,
-        MAIN_WIN_WIDTH,
-        MAIN_WIN_HEIGHT,
-        FRAME_RATE, BACKGROUND_COLOR,
-)
-
     pygame.init()
 
     pygame.display.set_caption(STR_GAME_TITLE)
@@ -36,8 +39,9 @@ if __name__ == '__main__':
         with contextlib.suppress(AttributeError):
             windll.user32.SetProcessDPIAware()
 
-    game_manager = GameController(main_screen)
-
-    exit_state = main_loop(game_manager, main_screen, pygame.time.Clock())
+    exit_state = ExitState.RESTART
+    while exit_state != ExitState.EXIT:
+        game_manager = GameController(main_screen)
+        exit_state = main_loop(game_manager, main_screen, pygame.time.Clock())
 
     pygame.quit()

@@ -20,7 +20,7 @@ class GameController:
     def exit(self) -> None:
         self.exit_state = ExitState.EXIT
 
-    def events(self, dt: float) -> None:
+    def events(self) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.exit()
@@ -37,22 +37,25 @@ class GameController:
         elif event.key in [pygame.K_RIGHT, pygame.K_d]:
             self.snake.set_direction(Direction.RIGHT)
 
+    def generate_fruit(self) -> Fruit:
+        # TODO: Improve this
+        return Fruit(random.randint(0, int(GRID_WIDTH)), random.randint(0, int(GRID_HEIGHT)), APPLE_COLOR)
+
     def draw(self) -> None:
         self.map.draw(self.screen)
         self.snake.draw(self.screen)
         self.fruit.draw(self.screen)
 
     def process_game_iteration(self, dt: float) -> ExitState:
-        self.events(dt)
+        self.events()
 
-        if self.snake.move(dt):
-            if self.snake.try_eat_fruit(self.fruit):
-                self.fruit = self.generate_fruit()
+        self.snake.move(dt)
+        if self.snake.try_eat_fruit(self.fruit):
+            self.fruit = self.generate_fruit()
+
+        if self.snake.check_self_collision():
+            self.exit_state = ExitState.RESTART
 
         self.draw()
 
         return self.exit_state
-
-    def generate_fruit(self) -> Fruit:
-        # TODO: Improve this
-        return Fruit(random.randint(0, int(GRID_WIDTH)), random.randint(0, int(GRID_HEIGHT)), APPLE_COLOR)
