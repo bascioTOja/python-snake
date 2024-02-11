@@ -26,7 +26,10 @@ class Map:
         pygame.draw.rect(
             screen,
             self.border_color,
-            (self.position[0] - self.border_width, self.position[1] - self.border_width, self.width + self.border_width*2, self.height + self.border_width*2)
+            (self.position[0] - self.border_width,
+             self.position[1] - self.border_width,
+             self.width + self.border_width * 2,
+             self.height + self.border_width * 2)
         )
 
         # Tiles
@@ -35,6 +38,9 @@ class Map:
             for x in range(self.tiles_in_width):
                 pygame.draw.rect(
                     screen, self.tiles_color if use_second_color else self.second_tiles_color,
-                    ((x * self.tile_size) + self.position[0], (y * self.tile_size) + self.position[1], self.tile_size, self.tile_size),
+                    ((x * self.tile_size) + self.position[0],
+                     (y * self.tile_size) + self.position[1],
+                     self.tile_size,
+                     self.tile_size),
                 )
                 use_second_color = not use_second_color

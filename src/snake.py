@@ -6,9 +6,19 @@ from src.fruit import Fruit
 from src.snake_part import SnakePart
 
 
+def check_if_is_possible_move(direction: Direction, move_direction: Direction) -> bool:
+    return (
+        (direction != Direction.LEFT or move_direction != Direction.RIGHT)
+        and (direction != Direction.RIGHT or move_direction != Direction.LEFT)
+        and (direction != Direction.UP or move_direction != Direction.DOWN)
+        and (direction != Direction.DOWN or move_direction != Direction.UP)
+    )
+
+
 class Snake:
     def __init__(self, screen: pygame.Surface):
         self.screen = screen
+        self.moves = []
         self.direction = Direction.RIGHT
         self.speed = 10 / SNAKE_SPEED
         self.move_timer = self.speed
@@ -16,11 +26,17 @@ class Snake:
         init_x = max(round(GRID_WIDTH * 0.3), 2)
         init_y = round(GRID_HEIGHT / 2)
 
-        self.body = [SnakePart(init_x, init_y, self.direction, HEAD_COLOR), SnakePart(init_x - 1, init_y, self.direction, SNAKE_COLOR)]
+        self.body = [SnakePart(init_x, init_y, self.direction, HEAD_COLOR),
+                     SnakePart(init_x - 1, init_y, self.direction, SNAKE_COLOR)]
 
-    def set_direction(self, direction: Direction) -> None:
-        # TODO: Make movement as queue
-        self.direction = direction
+    def append_move(self, direction: Direction) -> None:
+        last_move = self.moves[-1] if len(self.moves) else self.direction
+
+        if check_if_is_possible_move(last_move, direction):
+            self.moves.append(direction)
+
+    def get_move(self):
+        return self.moves.pop(0) if len(self.moves) else self.direction
 
     def move(self, dt: float) -> bool:
         if self.move_timer > 0:
@@ -28,6 +44,8 @@ class Snake:
             return False
 
         self.move_timer = self.speed
+
+        self.direction = self.get_move()
         move_direction = self.direction
 
         for part in self.body:

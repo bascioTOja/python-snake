@@ -29,13 +29,13 @@ class GameController:
 
     def keydown_events(self, event) -> None:
         if event.key in [pygame.K_UP, pygame.K_w]:
-            self.snake.set_direction(Direction.UP)
+            self.snake.append_move(Direction.UP)
         elif event.key in [pygame.K_DOWN, pygame.K_s]:
-            self.snake.set_direction(Direction.DOWN)
+            self.snake.append_move(Direction.DOWN)
         elif event.key in [pygame.K_LEFT, pygame.K_a]:
-            self.snake.set_direction(Direction.LEFT)
+            self.snake.append_move(Direction.LEFT)
         elif event.key in [pygame.K_RIGHT, pygame.K_d]:
-            self.snake.set_direction(Direction.RIGHT)
+            self.snake.append_move(Direction.RIGHT)
 
     def generate_fruit(self) -> Fruit:
         # TODO: Improve this
