@@ -38,8 +38,15 @@ class GameController:
             self.snake.append_move(Direction.RIGHT)
 
     def generate_fruit(self) -> Fruit:
-        # TODO: Improve this
-        return Fruit(random.randint(0, int(GRID_WIDTH)), random.randint(0, int(GRID_HEIGHT)), APPLE_COLOR)
+        available_spaces = [(x, y) for x in range(round(GRID_WIDTH)) for y in range(round(GRID_HEIGHT)) if not any(part.x == x and part.y == y for part in self.snake.body)]
+
+        if not available_spaces:
+            # TODO: Rethink this
+            raise Exception("No space left!")
+
+        fruit_position = random.choice(available_spaces)
+
+        return Fruit(fruit_position[0], fruit_position[1], APPLE_COLOR)
 
     def draw(self) -> None:
         self.map.draw(self.screen)

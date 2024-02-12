@@ -1,5 +1,4 @@
 from typing import Tuple
-
 import pygame
 
 from src.constants import TILE_SIZE, MAP_MARGIN
@@ -36,7 +35,6 @@ class SnakePart:
         return old_direction
 
     def draw(self, screen: pygame.Surface) -> None:
-
         pygame.draw.rect(
             screen,
             self.color,
@@ -48,6 +46,3 @@ class SnakePart:
             ((self.x * self.size) + self.offset_width, (self.y * self.size) + self.offset_height,self.size, self.size),
             2
         )
-
-    def __str__(self) -> str:
-        return f'({self.x}, {self.y} - {self.direction})'
