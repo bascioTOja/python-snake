@@ -1,7 +1,6 @@
 import sys
 
 import pygame
-import subprocess
 import platform
 import contextlib
 
@@ -9,9 +8,9 @@ from src.enums.exit_state import ExitState
 from src.game_controller import GameController
 from src.constants import (
     STR_GAME_TITLE,
-    MAIN_WIN_WIDTH,
-    MAIN_WIN_HEIGHT,
-    FRAME_RATE, BACKGROUND_COLOR,
+    MAIN_WIN_SIZE,
+    FRAME_RATE,
+    BACKGROUND_COLOR,
 )
 
 
@@ -30,7 +29,7 @@ if __name__ == '__main__':
     pygame.init()
 
     pygame.display.set_caption(STR_GAME_TITLE)
-    main_screen = pygame.display.set_mode((MAIN_WIN_WIDTH, MAIN_WIN_HEIGHT))
+    main_screen = pygame.display.set_mode((MAIN_WIN_SIZE, MAIN_WIN_SIZE))
 
     # Make sure the game will display correctly on high DPI monitors on Windows.
     if platform.system() == "Windows":

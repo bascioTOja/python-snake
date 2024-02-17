@@ -1,6 +1,6 @@
 import pygame
 
-from src.constants import GRID_WIDTH, GRID_HEIGHT, HEAD_COLOR, SNAKE_COLOR, SNAKE_SPEED
+from src.constants import MAP_SIZE_TILES, HEAD_COLOR, SNAKE_COLOR, SNAKE_SPEED
 from src.enums.direction import Direction
 from src.fruit import Fruit
 from src.snake_part import SnakePart
@@ -23,8 +23,8 @@ class Snake:
         self.speed = 10 / SNAKE_SPEED
         self.move_timer = self.speed
 
-        init_x = max(round(GRID_WIDTH * 0.3), 2)
-        init_y = round(GRID_HEIGHT / 2)
+        init_x = max(round(MAP_SIZE_TILES * 0.3), 2)
+        init_y = round(MAP_SIZE_TILES / 2)
 
         self.body = [SnakePart(init_x, init_y, HEAD_COLOR),
                      SnakePart(init_x - 1, init_y, SNAKE_COLOR)]
@@ -69,7 +69,7 @@ class Snake:
 
     def check_border_collision(self) -> bool:
         head = self.body[0]
-        return head.x < 0 or head.x >= GRID_WIDTH or head.y < 0 or head.y >= GRID_HEIGHT
+        return head.x < 0 or head.x >= MAP_SIZE_TILES or head.y < 0 or head.y >= MAP_SIZE_TILES
 
     def check_collisions(self) -> bool:
         return self.check_self_collision() or self.check_border_collision()
