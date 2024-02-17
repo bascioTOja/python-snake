@@ -8,10 +8,10 @@ from src.snake_part import SnakePart
 
 def check_if_is_possible_move(direction: Direction, move_direction: Direction) -> bool:
     return (
-        (direction != Direction.LEFT or move_direction != Direction.RIGHT)
-        and (direction != Direction.RIGHT or move_direction != Direction.LEFT)
-        and (direction != Direction.UP or move_direction != Direction.DOWN)
-        and (direction != Direction.DOWN or move_direction != Direction.UP)
+            (direction != Direction.LEFT or move_direction != Direction.RIGHT)
+            and (direction != Direction.RIGHT or move_direction != Direction.LEFT)
+            and (direction != Direction.UP or move_direction != Direction.DOWN)
+            and (direction != Direction.DOWN or move_direction != Direction.UP)
     )
 
 
@@ -26,8 +26,8 @@ class Snake:
         init_x = max(round(GRID_WIDTH * 0.3), 2)
         init_y = round(GRID_HEIGHT / 2)
 
-        self.body = [SnakePart(init_x, init_y, self.direction, HEAD_COLOR),
-                     SnakePart(init_x - 1, init_y, self.direction, SNAKE_COLOR)]
+        self.body = [SnakePart(init_x, init_y, HEAD_COLOR),
+                     SnakePart(init_x - 1, init_y, SNAKE_COLOR)]
 
     def append_move(self, direction: Direction) -> None:
         last_move = self.moves[-1] if len(self.moves) else self.direction
@@ -44,12 +44,12 @@ class Snake:
             return False
 
         self.move_timer = self.speed
-
         self.direction = self.get_move()
-        move_direction = self.direction
 
-        for part in self.body:
-            move_direction = part.move(move_direction)
+        move_position = self.body[0].move_by_direction(self.direction)
+        for part in self.body[1:]:
+            move_position = part.move(move_position)
+
         return True
 
     def try_eat_fruit(self, fruit: Fruit) -> bool:
@@ -59,7 +59,7 @@ class Snake:
         return False
 
     def grow(self) -> None:
-        self.body.append(SnakePart(self.body[-1].x, self.body[-1].y, Direction.STOP, SNAKE_COLOR))
+        self.body.append(SnakePart(self.body[-1].x, self.body[-1].y, SNAKE_COLOR))
 
     def check_self_collision(self) -> bool:
         return any(
