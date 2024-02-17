@@ -37,12 +37,11 @@ class GameController:
         elif event.key in [pygame.K_RIGHT, pygame.K_d]:
             self.snake.append_move(Direction.RIGHT)
 
-    def generate_fruit(self) -> Fruit:
+    def generate_fruit(self) -> Fruit | None:
         available_spaces = [(x, y) for x in range(round(GRID_WIDTH)) for y in range(round(GRID_HEIGHT)) if not any(part.x == x and part.y == y for part in self.snake.body)]
 
         if not available_spaces:
-            # TODO: Rethink this
-            raise Exception("No space left!")
+            return None
 
         fruit_position = random.choice(available_spaces)
 
@@ -60,7 +59,7 @@ class GameController:
         if self.snake.try_eat_fruit(self.fruit):
             self.fruit = self.generate_fruit()
 
-        if self.snake.check_collisions():
+        if self.snake.check_collisions() or self.fruit is None:
             self.exit_state = ExitState.RESTART
 
         self.draw()
