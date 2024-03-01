@@ -7,6 +7,7 @@ from src.enums.exit_state import ExitState
 from src.fruit import Fruit
 from src.map import Map
 from src.snake import Snake
+from src.vector import Vector
 
 
 class GameController:
@@ -38,14 +39,13 @@ class GameController:
             self.snake.append_move(Direction.RIGHT)
 
     def generate_fruit(self) -> Fruit | None:
-        available_spaces = [(x, y) for x in range(round(MAP_SIZE_TILES)) for y in range(round(MAP_SIZE_TILES)) if not any(part.x == x and part.y == y for part in self.snake.body)]
-
+        available_spaces = [(x, y) for x in range(round(MAP_SIZE_TILES)) for y in range(round(MAP_SIZE_TILES)) if not any(part.position.x == x and part.position.y == y for part in self.snake.body)]
         if not available_spaces:
             return None
 
         fruit_position = random.choice(available_spaces)
 
-        return Fruit(fruit_position[0], fruit_position[1], APPLE_COLOR)
+        return Fruit(Vector(fruit_position[0], fruit_position[1]))
 
     def draw(self) -> None:
         self.map.draw(self.screen)

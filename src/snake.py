@@ -3,6 +3,7 @@ import pygame
 from src.constants import MAP_SIZE_TILES, HEAD_COLOR, SNAKE_COLOR, SNAKE_SPEED
 from src.enums.direction import Direction
 from src.fruit import Fruit
+from src.vector import Vector
 from src.snake_part import SnakePart
 
 
@@ -26,8 +27,8 @@ class Snake:
         init_x = max(round(MAP_SIZE_TILES * 0.3), 2)
         init_y = round(MAP_SIZE_TILES / 2)
 
-        self.body = [SnakePart(init_x, init_y, HEAD_COLOR),
-                     SnakePart(init_x - 1, init_y, SNAKE_COLOR)]
+        self.body = [SnakePart(Vector(init_x, init_y), True),
+                     SnakePart(Vector(init_x - 1, init_y), False)]
 
     def append_move(self, direction: Direction) -> None:
         last_move = self.moves[-1] if len(self.moves) else self.direction
@@ -38,38 +39,47 @@ class Snake:
     def get_move(self):
         return self.moves.pop(0) if len(self.moves) else self.direction
 
-    def move(self, dt: float) -> bool:
+    def move(self, dt: float) -> None:
         if self.move_timer > 0:
             self.move_timer -= dt
-            return False
+            return
 
         self.move_timer = self.speed
         self.direction = self.get_move()
 
-        move_position = self.body[0].move_by_direction(self.direction)
-        for part in self.body[1:]:
-            move_position = part.move(move_position)
+        move_vector = Vector(0, 0)
+        if self.direction == Direction.UP:
+            move_vector = Vector(0, -1)
+        elif self.direction == Direction.DOWN:
+            move_vector = Vector(0, 1)
+        elif self.direction == Direction.LEFT:
+            move_vector = Vector(-1, 0)
+        elif self.direction == Direction.RIGHT:
+            move_vector = Vector(1, 0)
 
-        return True
+        self.body[0].change_to_body()
+        self.body.insert(0, SnakePart(self.body[0].position + move_vector, True))
+        if len(self.body) > 1:
+            self.body.pop()
 
     def try_eat_fruit(self, fruit: Fruit) -> bool:
-        if self.body[0].x == fruit.x and self.body[0].y == fruit.y:
+        if self.body[0].position == fruit.position:
             self.grow()
             return True
         return False
 
     def grow(self) -> None:
-        self.body.append(SnakePart(self.body[-1].x, self.body[-1].y, SNAKE_COLOR))
+        self.body.append(SnakePart(self.body[-1].position.clone(), False))
 
     def check_self_collision(self) -> bool:
         return any(
-            part.x == self.body[0].x and part.y == self.body[0].y
+            part.position == self.body[0].position
             for part in self.body[1:]
         )
 
     def check_border_collision(self) -> bool:
         head = self.body[0]
-        return head.x < 0 or head.x >= MAP_SIZE_TILES or head.y < 0 or head.y >= MAP_SIZE_TILES
+        return head.position.x < 0 or head.position.x >= MAP_SIZE_TILES or head.position.y < 0 or head.position.y >= MAP_SIZE_TILES
 
     def check_collisions(self) -> bool:
         return self.check_self_collision() or self.check_border_collision()

@@ -14,10 +14,17 @@ from src.constants import (
 )
 
 
+def set_process_dpi_aware():
+    from ctypes import windll
+
+    with contextlib.suppress(AttributeError):
+        windll.user32.SetProcessDPIAware()
+
+
 def main_loop(game_controller: GameController, screen: pygame.Surface, clock: pygame.time.Clock) -> ExitState:
     action: ExitState = ExitState.CONTINUE
     while action == ExitState.CONTINUE:
-        dt = clock.tick(FRAME_RATE)/1000
+        dt = clock.tick(FRAME_RATE) / 1000
         screen.fill(BACKGROUND_COLOR)
         action = game_controller.process_game_iteration(dt)
         pygame.display.update()
@@ -33,10 +40,7 @@ if __name__ == '__main__':
 
     # Make sure the game will display correctly on high DPI monitors on Windows.
     if platform.system() == "Windows":
-        from ctypes import windll
-
-        with contextlib.suppress(AttributeError):
-            windll.user32.SetProcessDPIAware()
+        set_process_dpi_aware()
 
     exit_state = ExitState.RESTART
     while exit_state != ExitState.EXIT:
