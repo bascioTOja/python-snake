@@ -1,7 +1,7 @@
 import random
 import pygame
 
-from src.constants import MAP_SIZE, TILE_SIZE, APPLE_COLOR, MAP_SIZE_TILES
+from src.constants import MAP_SIZE
 from src.enums.direction import Direction
 from src.enums.exit_state import ExitState
 from src.fruit import Fruit
@@ -13,8 +13,8 @@ from src.vector import Vector
 class GameController:
     def __init__(self, screen: pygame.Surface):
         self.screen = screen
-        self.map = Map(MAP_SIZE, MAP_SIZE, TILE_SIZE)
-        self.snake = Snake(self.screen)
+        self.map = Map(MAP_SIZE, MAP_SIZE)
+        self.snake = Snake(self.map)
         self.fruit = self.generate_fruit()
         self.exit_state = ExitState.CONTINUE
 
@@ -39,7 +39,7 @@ class GameController:
             self.snake.append_move(Direction.RIGHT)
 
     def generate_fruit(self) -> Fruit | None:
-        available_spaces = [(x, y) for x in range(round(MAP_SIZE_TILES)) for y in range(round(MAP_SIZE_TILES)) if not any(part.position.x == x and part.position.y == y for part in self.snake.body)]
+        available_spaces = [(x, y) for x in range(round(self.map.amount_tiles)) for y in range(round(self.map.amount_tiles)) if not any(part.position.x == x and part.position.y == y for part in self.snake.body)]
         if not available_spaces:
             return None
 

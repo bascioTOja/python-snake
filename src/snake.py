@@ -1,8 +1,9 @@
 import pygame
 
-from src.constants import MAP_SIZE_TILES, HEAD_COLOR, SNAKE_COLOR, SNAKE_SPEED
+from src.constants import SNAKE_SPEED
 from src.enums.direction import Direction
 from src.fruit import Fruit
+from src.map import Map
 from src.vector import Vector
 from src.snake_part import SnakePart
 
@@ -17,15 +18,15 @@ def check_if_is_possible_move(direction: Direction, move_direction: Direction) -
 
 
 class Snake:
-    def __init__(self, screen: pygame.Surface):
-        self.screen = screen
+    def __init__(self, game_map: Map):
+        self.map = game_map
         self.moves = []
         self.direction = Direction.RIGHT
         self.speed = 10 / SNAKE_SPEED
         self.move_timer = self.speed
 
-        init_x = max(round(MAP_SIZE_TILES * 0.3), 2)
-        init_y = round(MAP_SIZE_TILES / 2)
+        init_x = max(round(self.map.amount_tiles * 0.3), 2)
+        init_y = round(self.map.amount_tiles / 2)
 
         self.body = [SnakePart(Vector(init_x, init_y), True),
                      SnakePart(Vector(init_x - 1, init_y), False)]
@@ -79,7 +80,7 @@ class Snake:
 
     def check_border_collision(self) -> bool:
         head = self.body[0]
-        return head.position.x < 0 or head.position.x >= MAP_SIZE_TILES or head.position.y < 0 or head.position.y >= MAP_SIZE_TILES
+        return head.position.x < 0 or head.position.x >= self.map.amount_tiles or head.position.y < 0 or head.position.y >= self.map.amount_tiles
 
     def check_collisions(self) -> bool:
         return self.check_self_collision() or self.check_border_collision()
