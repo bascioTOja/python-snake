@@ -8,15 +8,6 @@ from src.vector import Vector
 from src.snake_part import SnakePart
 
 
-def check_if_is_possible_move(direction: Direction, move_direction: Direction) -> bool:
-    return (
-            (direction != Direction.LEFT or move_direction != Direction.RIGHT)
-            and (direction != Direction.RIGHT or move_direction != Direction.LEFT)
-            and (direction != Direction.UP or move_direction != Direction.DOWN)
-            and (direction != Direction.DOWN or move_direction != Direction.UP)
-    )
-
-
 class Snake:
     def __init__(self, game_map: Map):
         self.map = game_map
@@ -34,7 +25,7 @@ class Snake:
     def append_move(self, direction: Direction) -> None:
         last_move = self.moves[-1] if len(self.moves) else self.direction
 
-        if check_if_is_possible_move(last_move, direction):
+        if not last_move.is_same_axis(direction):
             self.moves.append(direction)
 
     def get_move(self):
@@ -48,20 +39,9 @@ class Snake:
         self.move_timer = self.speed
         self.direction = self.get_move()
 
-        move_vector = Vector(0, 0)
-        if self.direction == Direction.UP:
-            move_vector = Vector(0, -1)
-        elif self.direction == Direction.DOWN:
-            move_vector = Vector(0, 1)
-        elif self.direction == Direction.LEFT:
-            move_vector = Vector(-1, 0)
-        elif self.direction == Direction.RIGHT:
-            move_vector = Vector(1, 0)
-
         self.body[0].change_to_body()
-        self.body.insert(0, SnakePart(self.body[0].position + move_vector, True))
-        if len(self.body) > 1:
-            self.body.pop()
+        self.body.insert(0, SnakePart(self.body[0].position + self.direction.get_vector(), True))
+        self.body.pop()
 
     def try_eat_fruit(self, fruit: Fruit) -> bool:
         if self.body[0].position == fruit.position:
